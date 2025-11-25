@@ -148,7 +148,7 @@ for i in range(3):
     plt.plot(
         altura_teo,
         linestyle="-",
-        color="white",
+        color="#0000",
         linewidth=2,
         label=f"Error: {error:.2f} m"
     )
@@ -158,6 +158,70 @@ for i in range(3):
     plt.ylabel("Altura (m)")
     plt.grid(True)
     plt.legend(loc="upper right")
+
+plt.tight_layout()
+plt.show()
+
+# ================================
+# 📌 Curvas Altitud vs Presión + Error Promedio
+# ================================
+
+plt.figure(figsize=(14, 12))
+
+for i in range(3):
+    vuelo_df = vuelos[i]
+
+    # Datos reales
+    P_real = vuelo_df["presion"]
+    h_real = vuelo_df["altura_m"]
+
+    # Presión base del vuelo
+    P0 = P_real.iloc[0]
+
+    # Curva teórica usando P_real
+    h_teo_realP = 44330 * (1 - (P_real / P0) ** 0.1903)
+
+    # Curva teórica ordenada (suavizada)
+    h_teo = np.linspace(h_real.min(), h_real.max(), 200)
+    P_teo = P0 * (1 - (h_teo / 44330)) ** 5.255
+
+    # Error punto a punto
+    error_i = h_real - h_teo_realP
+    error_prom = np.mean(np.abs(error_i))
+
+    plt.subplot(3, 1, i + 1)
+
+    # ============================
+    # Curva real
+    plt.plot(
+        P_real, h_real,
+        color="blue",
+        linewidth=2,
+        label="Curva Real (Sensor)"
+    )
+
+    # Curva teórica
+    plt.plot(
+        P_teo, h_teo,
+        color="red",
+        linestyle="--",
+        linewidth=2,
+        label="Curva Teórica (Ecuación Barométrica)"
+    )
+
+    plt.plot(
+        P_teo, h_teo,
+        color="#0000",
+        linestyle="-",
+        linewidth=2,
+        label=f"Error promedio: {error_prom:.2f} m"
+    )
+
+    plt.title(f"Vuelo {i+1}: Altitud vs Presión")
+    plt.xlabel("Presión (hPa)")
+    plt.ylabel("Altitud (m)")
+    plt.grid(True)
+    plt.legend(loc="best")
 
 plt.tight_layout()
 plt.show()
