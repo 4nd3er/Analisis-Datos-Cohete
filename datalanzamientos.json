@@ -1,0 +1,99 @@
+{
+  "sin_componentes_electronicos": {
+    "intentos": [
+      {
+        "numero_intento": 1,
+        "presion_inicial_psi": 50,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 5.230
+      },
+      {
+        "numero_intento": 2,
+        "presion_inicial_psi": 44,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 4.820
+      },
+      {
+        "numero_intento": 3,
+        "presion_inicial_psi": 47,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 5.090
+      },
+      {
+        "numero_intento": 4,
+        "presion_inicial_psi": 53,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 5.340
+      },
+      {
+        "numero_intento": 5,
+        "presion_inicial_psi": 49,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 5.180
+      },
+      {
+        "numero_intento": 6,
+        "presion_inicial_psi": 51,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 5.270
+      }
+    ],
+    "promedio": {
+      "presion_inicial_psi": 49.0,
+      "volumen_agua_ml": 500,
+      "tiempo_vuelo_s": 5.155
+    }
+  },
+
+  "con_componentes_electronicos": {
+    "intentos": [
+      {
+        "numero_intento": 1,
+        "presion_inicial_psi": 55,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 3.880,
+        "paracaidas_desplegado": true
+      },
+      {
+        "numero_intento": 2,
+        "presion_inicial_psi": 60,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 4.110,
+        "paracaidas_desplegado": true
+      },
+      {
+        "numero_intento": 3,
+        "presion_inicial_psi": 48,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 3.430,
+        "paracaidas_desplegado": true
+      },
+      {
+        "numero_intento": 4,
+        "presion_inicial_psi": 45,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 3.710,
+        "paracaidas_desplegado": true
+      },
+      {
+        "numero_intento": 5,
+        "presion_inicial_psi": 50,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 3.920,
+        "paracaidas_desplegado": true
+      },
+      {
+        "numero_intento": 6,
+        "presion_inicial_psi": 58,
+        "volumen_agua_ml": 500,
+        "tiempo_vuelo_s": 4.050,
+        "paracaidas_desplegado": true
+      }
+    ],
+    "promedio": {
+      "presion_inicial_psi": 52.7,
+      "volumen_agua_ml": 500,
+      "tiempo_vuelo_s": 3.850
+    }
+  }
+}
