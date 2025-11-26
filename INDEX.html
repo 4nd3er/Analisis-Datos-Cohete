@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Cohete - Suite Completa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px 20px;
+        }
+        
+        .script-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .script-card {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .script-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border-color: #764ba2;
+        }
+        
+        .script-card h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+        
+        .script-card p {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .script-card .numero {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .links a {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        
+        .links a:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+        
+        .links a.secondary {
+            background: #f0f0f0;
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+        
+        .links a.secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .features {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .features h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .feature-item::before {
+            content: "✓";
+            display: inline-block;
+            color: #00AA44;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-top: -2px;
+        }
+        
+        .feature-item span {
+            color: #555;
+            font-size: 0.95em;
+        }
+        
+        .footer {
+            background: #f0f0f0;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .script-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ANÁLISIS INTEGRAL DEL COHETE</h1>
+            <p>Suite Completa de Análisis Aerodinámico - Basado en DATOSHpaFixed.json</p>
+        </div>
+        
+        <div class="content">
+            <div class="script-grid">
+                <!-- Script 1 -->
+                <div class="script-card">
+                    <div class="numero">1</div>
+                    <h3>Fases de Vuelo</h3>
+                    <p>Detecta automáticamente el ascenso, apogeo y descenso del cohete. Muestra gráfica interactiva con colores diferenciados por fase.</p>
+                    <div class="links">
+                        <a href="01_fases_vuelo.html" target="_blank">📊 Ver Gráfica</a>
+                        <a href="01_fases_vuelo.py" class="secondary">📄 Ver Script</a>
+                    </div>
+                </div>
+                
+                <!-- Script 2 -->
+                <div class="script-card">
+                    <div class="numero">2</div>
+                    <h3>Presión y Paracaídas</h3>
+                    <p>Calcula derivada de presión y detecta el despliegue del paracaídas con precisión. Marca el punto exacto en la gráfica.</p>
+                    <div class="links">
+                        <a href="02_presion_paracaidas.html" target="_blank">📊 Ver Gráfica</a>
+                        <a href="02_presion_paracaidas.py" class="secondary">📄 Ver Script</a>
+                    </div>
+                </div>
+                
+                <!-- Script 3 -->
+                <div class="script-card">
+                    <div class="numero">3</div>
+                    <h3>Densidad Aerodinámica</h3>
+                    <p>Analiza la densidad del aire usando la ecuación del gas ideal. Gráficas de densidad vs altitud y efectos aerodinámicos.</p>
+                    <div class="links">
+                        <a href="03_densidad_aerodinamica.html" target="_blank">📊 Ver Gráfica</a>
+                        <a href="03_densidad_aerodinamica.py" class="secondary">📄 Ver Script</a>
+                    </div>
+                </div>
+                
+                <!-- Script 4 -->
+                <div class="script-card">
+                    <div class="numero">4</div>
+                    <h3>Detección de Anomalías</h3>
+                    <p>Identifica anomalías en temperatura y presión usando Z-score e IQR. Clasifica posibles causas (ruido, vibración, EMI).</p>
+                    <div class="links">
+                        <a href="04_anomalias_temperatura.html" target="_blank">🌡️ Temperatura</a>
+                        <a href="04_anomalias_presion.html" target="_blank">🔵 Presión</a>
+                        <a href="04_anomalias_sensores.py" class="secondary">📄 Script</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features">
+                <h3>🎯 Características Principales</h3>
+                <div class="feature-list">
+                    <div class="feature-item"><span>Gráficas interactivas HTML con Plotly</span></div>
+                    <div class="feature-item"><span>Detección automática de eventos críticos</span></div>
+                    <div class="feature-item"><span>Análisis de densidad con ecuación de gas ideal</span></div>
+                    <div class="feature-item"><span>Detección de anomalías con Z-score e IQR</span></div>
+                    <div class="feature-item"><span>Documentación científica completa</span></div>
+                    <div class="feature-item"><span>Presentación académica profesional</span></div>
+                    <div class="feature-item"><span>Análisis en tiempo real interpretable</span></div>
+                    <div class="feature-item"><span>Explicaciones físicas de fenómenos</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Análisis de Cohetes Experimentales | Datos: DATOSHpaFixed.json (8,134 puntos) | Tiempo total: 1209.69 segundos</p>
+        </div>
+    </div>
+</body>
+</html>
