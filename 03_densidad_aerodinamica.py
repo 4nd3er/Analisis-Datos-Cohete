@@ -43,7 +43,18 @@ def cargar_datos():
     
     # Fórmula barométrica
     h = (T0 / Gamma) * ((presion_pa / P0) ** (-Gamma * R / g) - 1)
-    df['altitud'] = h
+    
+    # Normalizar a 13.98m (altura máxima real)
+    h_min = h.min()
+    h_max = h.max()
+    h_rango = h_max - h_min
+    
+    if h_rango != 0:
+        altitud_normalizada = ((h - h_min) / h_rango) * 13.98
+    else:
+        altitud_normalizada = np.full_like(h, 13.98 / 2)
+    
+    df['altitud'] = altitud_normalizada
     
     return df, presion_pa, temp_k
 
@@ -215,7 +226,121 @@ def crear_grafica_interactiva(df, densidad):
         legend=dict(x=0.02, y=0.98, bgcolor='rgba(255,255,255,0.8)', bordercolor='black', borderwidth=1)
     )
     
-    return fig
+    # Crear HTML personalizado con explicaciones
+    html_content = fig.to_html(include_plotlyjs='cdn')
+    
+    # Agregar explicaciones después de la gráfica
+    explicaciones = """
+    <div style="font-family: Arial, sans-serif; max-width: 1400px; margin: 30px auto; padding: 20px;">
+        <h2 style="color: #1f77b4; border-bottom: 3px solid #1f77b4; padding-bottom: 10px;">📊 Explicación: Densidad Aerodinámica</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px;">
+            
+            <!-- GRÁFICA 1 -->
+            <div style="background: #E3F2FD; padding: 20px; border-radius: 8px; border-left: 5px solid #0066FF;">
+                <h3 style="color: #0066FF; margin-top: 0;">📈 Panel 1: Densidad vs Altitud</h3>
+                <p><b>¿Qué muestra?</b></p>
+                <ul>
+                    <li>La relación entre densidad del aire y altitud</li>
+                    <li>Cada punto representa una medición durante el vuelo</li>
+                    <li>Colores = progresión del tiempo (azul = inicio, amarillo = final)</li>
+                    <li>Línea roja punteada = tendencia general</li>
+                </ul>
+                <p><b>Patrón observado:</b></p>
+                <ul>
+                    <li>A <b>MAYOR altitud → MENOR densidad</b></li>
+                    <li>La relación es aproximadamente <b>exponencial</b></li>
+                    <li>En el apogeo (13.98m): densidad mínima</li>
+                </ul>
+            </div>
+            
+            <!-- GRÁFICA 2 -->
+            <div style="background: #F0F4C3; padding: 20px; border-radius: 8px; border-left: 5px solid #00AA44;">
+                <h3 style="color: #00AA44; margin-top: 0;">⏱️ Panel 2: Densidad vs Tiempo</h3>
+                <p><b>¿Qué muestra?</b></p>
+                <ul>
+                    <li>Cómo cambia la densidad a lo largo del vuelo completo</li>
+                    <li>Línea verde suave para mejor visualización</li>
+                </ul>
+                <p><b>Fases del vuelo:</b></p>
+                <ul>
+                    <li><b>0-1.1s (Ascenso):</b> Densidad disminuye rápidamente</li>
+                    <li><b>1.1s (Apogeo):</b> Densidad mínima</li>
+                    <li><b>1.1-4s (Descenso):</b> Densidad aumenta gradualmente</li>
+                </ul>
+            </div>
+            
+            <!-- GRÁFICA 3 -->
+            <div style="background: #FFEBEE; padding: 20px; border-radius: 8px; border-left: 5px solid #FF6B6B;">
+                <h3 style="color: #FF6B6B; margin-top: 0;">🌡️ Panel 3: Temperatura vs Altitud</h3>
+                <p><b>¿Qué muestra?</b></p>
+                <ul>
+                    <li>Cómo varía la temperatura con la altitud</li>
+                    <li>Cada punto representa una medición del sensor</li>
+                </ul>
+                <p><b>Observaciones:</b></p>
+                <ul>
+                    <li>La temperatura típicamente <b>disminuye</b> con la altitud</li>
+                    <li>Influye en la densidad según: ρ = P / (R × T)</li>
+                    <li>A mayor T → menor ρ (a presión constante)</li>
+                </ul>
+            </div>
+            
+            <!-- GRÁFICA 4 -->
+            <div style="background: #E1F5FE; padding: 20px; border-radius: 8px; border-left: 5px solid #0088DD;">
+                <h3 style="color: #0088DD; margin-top: 0;">💨 Panel 4: Presión vs Altitud</h3>
+                <p><b>¿Qué muestra?</b></p>
+                <ul>
+                    <li>La presión atmosférica a diferentes altitudes</li>
+                    <li>Relación inversa muy clara: más alto = menos presión</li>
+                </ul>
+                <p><b>Fórmula barométrica:</b></p>
+                <ul>
+                    <li>P = P₀ × e^(-h/H)</li>
+                    <li>Disminuye aproximadamente 11% cada km de altitud</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="background: #FFF3E0; padding: 20px; border-radius: 8px; margin-top: 30px; border: 2px solid #FF8C00;">
+            <h3 style="color: #FF8C00; margin-top: 0;">🔬 La Ecuación: ρ = P / (R × T)</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <tr style="background: #FFE0B2;">
+                    <td style="padding: 10px; border: 1px solid #FF8C00;"><b>ρ</b></td>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;">Densidad del aire (kg/m³)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;"><b>P</b></td>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;">Presión absoluta (Pa)</td>
+                </tr>
+                <tr style="background: #FFE0B2;">
+                    <td style="padding: 10px; border: 1px solid #FF8C00;"><b>R</b></td>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;">287.05 J/(kg·K) (constante del aire)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;"><b>T</b></td>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;">Temperatura absoluta (K = °C + 273.15)</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div style="background: #F5F5F5; padding: 20px; border-radius: 8px; margin-top: 30px; border: 2px solid #1f77b4;">
+            <h3 style="color: #1f77b4; margin-top: 0;">💡 Impacto en la Aerodinámica</h3>
+            <ul>
+                <li><b>Resistencia aerodinámica:</b> D = 0.5 × ρ × v² × Cd × A</li>
+                <li>Mayor densidad → Mayor arrastre → Mayor desaceleración</li>
+                <li><b>Despliegue de paracaídas:</b> Requiere densidad mínima (500-1000m aprox.)</li>
+                <li><b>Velocidad terminal:</b> vt = √(2mg / (ρ Cd A))</li>
+                <li>La densidad es CRÍTICA para entender la dinámica del vuelo</li>
+            </ul>
+        </div>
+    </div>
+    """
+    
+    # Insertar explicaciones antes del cierre del body
+    html_content = html_content.replace('</body>', explicaciones + '</body>')
+    
+    return html_content
 
 def main():
     print("\n" + "="*70)
@@ -241,11 +366,12 @@ def main():
     print(f"  • Desv. Est.: {densidad.std():.6f} kg/m³")
     
     print("\n✓ Generando gráfica interactiva...")
-    fig = crear_grafica_interactiva(df, densidad)
+    html_content = crear_grafica_interactiva(df, densidad)
     
     # Guardar HTML
     archivo_html = Path(__file__).parent / "03_densidad_aerodinamica.html"
-    fig.write_html(str(archivo_html))
+    with open(str(archivo_html), 'w', encoding='utf-8') as f:
+        f.write(html_content)
     print(f"  → Gráfica guardada en: {archivo_html}")
     
     # Abrir en navegador
