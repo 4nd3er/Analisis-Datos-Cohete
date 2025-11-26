@@ -206,7 +206,82 @@ def crear_grafica_interactiva(df, presion_suavizada, derivada_temporal, idx_apog
         legend=dict(x=0.02, y=0.98, bgcolor='rgba(255,255,255,0.8)', bordercolor='black', borderwidth=1)
     )
     
-    return fig
+    # Crear HTML personalizado con explicaciones
+    html_content = fig.to_html(include_plotlyjs='cdn')
+    
+    # Agregar explicaciones después de la gráfica
+    explicaciones = """
+    <div style="font-family: Arial, sans-serif; max-width: 1400px; margin: 30px auto; padding: 20px;">
+        <h2 style="color: #1f77b4; border-bottom: 3px solid #1f77b4; padding-bottom: 10px;">📊 Explicación: Presión y Despliegue del Paracaídas</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+            
+            <!-- GRÁFICA 1: PRESIÓN -->
+            <div style="background: #E3F2FD; padding: 20px; border-radius: 8px; border-left: 5px solid #0066FF;">
+                <h3 style="color: #0066FF; margin-top: 0;">📈 Gráfica 1: Presión vs Tiempo</h3>
+                <p><b>¿Qué muestra?</b></p>
+                <ul>
+                    <li>La presión atmosférica a lo largo del vuelo del cohete</li>
+                    <li>Línea gris clara: datos crudos con ruido de sensores</li>
+                    <li>Línea azul: presión suavizada para eliminar ruido</li>
+                </ul>
+                <p><b>Interpretación física:</b></p>
+                <ul>
+                    <li>A mayor altitud → menor presión atmosférica</li>
+                    <li>La presión disminuye durante el ascenso</li>
+                    <li>La presión es mínima en el apogeo (máxima altitud)</li>
+                    <li>La presión aumenta durante el descenso</li>
+                </ul>
+                <p><b>⭐ Apogeo:</b> Marcado con un diamante dorado - punto donde la presión es mínima</p>
+            </div>
+            
+            <!-- GRÁFICA 2: DERIVADA -->
+            <div style="background: #FCE4EC; padding: 20px; border-radius: 8px; border-left: 5px solid #FF6B6B;">
+                <h3 style="color: #FF6B6B; margin-top: 0;">⚡ Gráfica 2: Derivada de Presión (dP/dt)</h3>
+                <p><b>¿Qué muestra?</b></p>
+                <ul>
+                    <li>La velocidad de cambio de la presión (hPa/s)</li>
+                    <li>Detecta cambios bruscos en la presión</li>
+                    <li>Es especialmente útil para detectar el despliegue del paracaídas</li>
+                </ul>
+                <p><b>Interpretación física:</b></p>
+                <ul>
+                    <li><b>Negativo durante ascenso:</b> Presión disminuye rápidamente</li>
+                    <li><b>Picos/cambios bruscos:</b> Eventos importantes del vuelo</li>
+                    <li><b>🔴 Pico rojo con estrella:</b> Despliegue del paracaídas - cambio brusco en presión</li>
+                    <li>El paracaídas provoca una desaceleración que genera un pico de presión</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="background: #F5F5F5; padding: 20px; border-radius: 8px; margin-top: 30px; border: 2px solid #1f77b4;">
+            <h3 style="color: #1f77b4; margin-top: 0;">💡 Conceptos Clave</h3>
+            <ul>
+                <li><b>Presión (hPa):</b> Fuerza del aire comprimido en hectopascales</li>
+                <li><b>Derivada (dP/dt):</b> Tasa de cambio de presión por segundo</li>
+                <li><b>Despliegue:</b> Momento exacto cuando el paracaídas se abre</li>
+                <li><b>Pico en la derivada:</b> Indica un cambio abrupto de presión causado por el paracaídas</li>
+                <li><b>Relación P-h:</b> La presión está inversamente relacionada con la altitud</li>
+            </ul>
+        </div>
+        
+        <div style="background: #FFF3E0; padding: 20px; border-radius: 8px; margin-top: 30px; border: 2px solid #FF8C00;">
+            <h3 style="color: #FF8C00; margin-top: 0;">🎯 Importancia del Análisis</h3>
+            <p>Este análisis es crucial para:</p>
+            <ul>
+                <li>Verificar que el paracaídas se desplegó en el momento correcto</li>
+                <li>Detectar fallas en el sistema de paracaídas</li>
+                <li>Analizar la efectividad del frenado aerodinámico</li>
+                <li>Optimizar los sistemas de seguridad del cohete</li>
+            </ul>
+        </div>
+    </div>
+    """
+    
+    # Insertar explicaciones antes del cierre del body
+    html_content = html_content.replace('</body>', explicaciones + '</body>')
+    
+    return html_content
 
 def main():
     print("\n" + "="*70)
@@ -232,11 +307,12 @@ def main():
     print(f"  → Altitud aproximada: {df['altitud'].iloc[idx_despliegue]:.2f}m")
     
     print("\n✓ Generando gráfica interactiva...")
-    fig = crear_grafica_interactiva(df, presion_suavizada, derivada_temporal, idx_apogeo, idx_despliegue)
+    html_content = crear_grafica_interactiva(df, presion_suavizada, derivada_temporal, idx_apogeo, idx_despliegue)
     
     # Guardar HTML
     archivo_html = Path(__file__).parent / "02_presion_paracaidas.html"
-    fig.write_html(str(archivo_html))
+    with open(str(archivo_html), 'w', encoding='utf-8') as f:
+        f.write(html_content)
     print(f"  → Gráfica guardada en: {archivo_html}")
     
     # Abrir en navegador

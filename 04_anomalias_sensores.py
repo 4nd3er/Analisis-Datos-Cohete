@@ -249,7 +249,115 @@ def crear_grafica_anomalias(df, col_analizar, anomalias_zscore, anomalias_iqr):
         legend=dict(x=0.02, y=0.98, bgcolor='rgba(255,255,255,0.9)', bordercolor='black', borderwidth=1)
     )
     
-    return fig, indices_anomalias
+    # Crear HTML personalizado con explicaciones
+    html_content = fig.to_html(include_plotlyjs='cdn')
+    
+    # Agregar explicaciones después de la gráfica
+    explicaciones = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 1400px; margin: 30px auto; padding: 20px;">
+        <h2 style="color: #1f77b4; border-bottom: 3px solid #1f77b4; padding-bottom: 10px;">📊 Explicación: Detección de Anomalías en {col_analizar.capitalize()}</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px;">
+            
+            <!-- MÉTODO 1: Z-SCORE -->
+            <div style="background: #FCE4EC; padding: 20px; border-radius: 8px; border-left: 5px solid #FF8C00;">
+                <h3 style="color: #FF8C00; margin-top: 0;">📈 Método 1: Z-Score</h3>
+                <p><b>¿Qué es?</b></p>
+                <ul>
+                    <li>Mide cuántas desviaciones estándar (σ) está un punto de la media</li>
+                    <li>Fórmula: Z = (x - media) / σ</li>
+                </ul>
+                <p><b>Criterio de anomalía:</b></p>
+                <ul>
+                    <li>|Z| > 3: Anomalía muy probable (99.7% confianza)</li>
+                    <li>|Z| > 2: Anomalía probable (95% confianza)</li>
+                </ul>
+                <p><b>Ventajas:</b></p>
+                <ul>
+                    <li>Detecta desviaciones respecto a la media</li>
+                    <li>Sensible a cambios bruscos</li>
+                </ul>
+                <p><b>Desventajas:</b></p>
+                <ul>
+                    <li>Afectado por la media y desv. estándar</li>
+                    <li>Poco útil si hay muchas anomalías</li>
+                </ul>
+            </div>
+            
+            <!-- MÉTODO 2: IQR -->
+            <div style="background: #E8F5E9; padding: 20px; border-radius: 8px; border-left: 5px solid #00AA44;">
+                <h3 style="color: #00AA44; margin-top: 0;">📊 Método 2: Rango Intercuartílico (IQR)</h3>
+                <p><b>¿Qué es?</b></p>
+                <ul>
+                    <li>Q1 = 25% percentil, Q3 = 75% percentil</li>
+                    <li>IQR = Q3 - Q1</li>
+                </ul>
+                <p><b>Criterio de anomalía:</b></p>
+                <ul>
+                    <li>x < Q1 - 1.5×IQR: Anomalía baja</li>
+                    <li>x > Q3 + 1.5×IQR: Anomalía alta</li>
+                </ul>
+                <p><b>Ventajas:</b></p>
+                <ul>
+                    <li>Robusto frente a outliers</li>
+                    <li>No afectado por la distribución</li>
+                </ul>
+                <p><b>Desventajas:</b></p>
+                <ul>
+                    <li>Menos sensible a cambios sutiles</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="background: #FFF3E0; padding: 20px; border-radius: 8px; margin-top: 30px; border: 2px solid #FF8C00;">
+            <h3 style="color: #FF8C00; margin-top: 0;">🎯 Clasificación de Anomalías</h3>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <tr style="background: #FFE0B2;">
+                    <td style="padding: 10px; border: 1px solid #FF8C00; font-weight: bold; color: #FF0000;">🔴 Rojo (Ambos métodos)</td>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;">Anomalía confirmada por Z-score E IQR - Alta confianza</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #FF8C00; font-weight: bold; color: #FF8C00;">🟠 Naranja (Z-score)</td>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;">Desviación muy grande respecto a la media</td>
+                </tr>
+                <tr style="background: #FFE0B2;">
+                    <td style="padding: 10px; border: 1px solid #FF8C00; font-weight: bold; color: #FFD700;">🟡 Amarillo (IQR)</td>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;">Fuera del rango típico - Outlier moderado</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #FF8C00; font-weight: bold; color: #0066FF;">🔵 Azul</td>
+                    <td style="padding: 10px; border: 1px solid #FF8C00;">Datos normales - Dentro de rangos esperados</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div style="background: #F5F5F5; padding: 20px; border-radius: 8px; margin-top: 30px; border: 2px solid #1f77b4;">
+            <h3 style="color: #1f77b4; margin-top: 0;">💡 Causas Potenciales de Anomalías</h3>
+            <ul>
+                <li><b>Ruido de Sensor:</b> Cambios muy rápidos y puntuales - Interferencia electromagnética</li>
+                <li><b>Vibración del Cohete:</b> Oscilaciones pequeñas repetitivas - Motor en funcionamiento</li>
+                <li><b>Interferencia EMI:</b> Picos aislados muy grandes - Radiación RF cercana</li>
+                <li><b>Cambios Físicos Legítimos:</b> Transiciones suaves correlacionadas - Despliegue de paracaídas</li>
+            </ul>
+        </div>
+        
+        <div style="background: #E3F2FD; padding: 20px; border-radius: 8px; margin-top: 30px; border: 2px solid #0066FF;">
+            <h3 style="color: #0066FF; margin-top: 0;">🔍 Cómo Interpretar los Resultados</h3>
+            <ol>
+                <li><b>Identifica anomalías:</b> Busca puntos rojos (máxima confianza)</li>
+                <li><b>Analiza el contexto:</b> ¿Ocurren en momentos específicos del vuelo?</li>
+                <li><b>Correlaciona variables:</b> ¿Otras variables muestran lo mismo?</li>
+                <li><b>Determina causa:</b> ¿Es ruido o un cambio legítimo?</li>
+                <li><b>Toma acción:</b> Filtra ruido o investiga cambios reales</li>
+            </ol>
+        </div>
+    </div>
+    """
+    
+    # Insertar explicaciones antes del cierre del body
+    html_content = html_content.replace('</body>', explicaciones + '</body>')
+    
+    return fig, indices_anomalias, html_content
 
 def main():
     print("\n" + "="*70)
@@ -295,11 +403,12 @@ def main():
         
         # Generar gráfica
         print(f"\n  ✓ Generando gráfica para {col}...")
-        fig, _ = crear_grafica_anomalias(df, col, anomalias_z, anomalias_iqr)
+        fig, _, html_content = crear_grafica_anomalias(df, col, anomalias_z, anomalias_iqr)
         
         # Guardar HTML
         archivo_html = Path(__file__).parent / f"04_anomalias_{col}.html"
-        fig.write_html(str(archivo_html))
+        with open(str(archivo_html), 'w', encoding='utf-8') as f:
+            f.write(html_content)
         figs_html.append(archivo_html)
         print(f"    → Guardada en: {archivo_html}")
     
